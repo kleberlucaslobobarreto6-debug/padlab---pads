@@ -236,7 +236,7 @@ export default function PadLabPro() {
   const handleDrumClick = useCallback((pad, index) => {
     playDrumSound(pad)
     addRipple('d'+index)
-    setFlashDrum(pad.id)
+    setFlashDrum(index)
     setTimeout(()=>setFlashDrum(null),150)
   }, [playDrumSound,addRipple])
 
@@ -505,24 +505,24 @@ export default function PadLabPro() {
             </div>
             <div className="grid grid-cols-4 gap-1.5 flex-1">
               {drumPads.map((pad,index)=>{
-                const isFlash=flashDrum===pad.id
+                const isFlash=flashDrum===index
                 const hasRipple=ripples.some(r=>r.target==='d'+index)
                 const dc=DRUM_COLOR[pad.type]||'#888'
                 const hasAudio=!!pad.audioBuffer
                 return (
-                  <button key={pad.id+index}
+                  <button key={index}
                     className="db rounded-[14px] relative overflow-hidden flex flex-col justify-between p-2 transition-all duration-75"
                     style={{
                       background:isFlash?`linear-gradient(145deg,${dc}cc,${dc}77)`:hasAudio?`${dc}14`:'rgba(255,255,255,0.04)',
                       border:`1px solid ${isFlash?dc:hasAudio?dc+'44':'rgba(255,255,255,0.07)'}`,
                       boxShadow:isFlash?`0 0 16px ${dc}55,inset 0 1px 0 rgba(255,255,255,0.2)`:'none',
                     }}
-                    onClick={()=>handleDrumClick(pad,index)}
-                    onDoubleClick={()=>setEditingPad({type:'drum',index})}>
+                    onClick={()=>handleDrumClick(pad,index)}>
                     {hasRipple&&<div className="ripple-ring absolute inset-0 rounded-[14px]" style={{border:`1.5px solid ${dc}`}}/>}
                     <div className="flex justify-between items-start">
                       <div className="w-1.5 h-1.5 rounded-full mt-0.5" style={{background:isFlash?'rgba(255,255,255,0.6)':dc,opacity:isFlash?1:0.6}}/>
-                      <button className="ei w-4 h-4 rounded flex items-center justify-center"
+                      <button
+                        className="w-4 h-4 rounded flex items-center justify-center opacity-40 hover:opacity-100 transition-opacity"
                         style={{background:'rgba(0,0,0,0.45)',fontSize:7}}
                         onClick={e=>{e.stopPropagation();setEditingPad({type:'drum',index})}}>⚙</button>
                     </div>
